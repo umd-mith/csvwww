@@ -2,12 +2,44 @@
 <html>
   <head>
     <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/normalize.css" />
     <link rel="stylesheet" href="/css/foundation.css" />
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name"><h1><a href="/">csvhub</a></h1></li>
+      </ul>
+      <section class="top-bar-section">
+        <ul class="left">
+          <li><a href="/datasets">Datasets</a></li>
+          <li><a href="/users">Users</a></li>
+          {{# if user }}
+          <li><a href="/upload">Upload</a>
+          {{/if}}
+        </ul>
+        <ul class="right">
+          {{# if user }}
+          <li>
+            <a href="/users/{{ user.username }}">{{ user.username }}</a>
+          </li>
+          <li>
+            <a href="/auth/logout">logout</a>
+          </li>
+          {{else}}
+          <li><a href="/auth/login">Login</a></li>
+          {{/if}}
+        </ul>
+      </section>
+    </nav>
     {{{body}}}
-    <script src="/js/foundation.js"></script>
     <script src="/js/jquery.js"></script>
+    <script src="/js/foundation.js"></script>
+    <script>
+      $(function() {
+        $(document).foundation();
+      });
+    </script>
   </body>
 </html>

@@ -10,3 +10,4 @@ module.exports.User = mongoose.model('User', {
   avatar: String
 });
 
+module.exports.mongoose = mongoose;

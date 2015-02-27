@@ -4,7 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
-var db = require('../db.js');
+var User = require('../models.js').User;
 var config = JSON.parse(fs.readFileSync('config.json'));
 
 passport.use(new TwitterStrategy({
@@ -15,17 +15,18 @@ passport.use(new TwitterStrategy({
     successFlash: 'Welcome!'
   },
   function(token, tokenSecret, profile, done) {
-    db.User.findOne({username: profile.username}, function(err, user) {
+    User.findOne({username: profile.username}, function(err, user) {
       if (err) {
         console.log(err);
-      } 
+      }
       if (user) {
         done(null, user);
       } else {
-        user = new db.User({
+        console.log(profile);
+        user = new User({
           username: profile.username,
           displayName: profile.displayName,
-          avatar: profile.photos[0]
+          avatar: profile.photos[0].value
         });
         user.save(function(err, user) {
           if (err) {
@@ -40,19 +41,13 @@ passport.use(new TwitterStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-  console.log('serializing: ' + user);
   done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
-  db.User.findById(id, function(err, user) {
-    console.log('deseriealized: ' + user.username);
+  User.findById(id, function(err, user) {
     done(null, user);
   });
-});
-
-router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Login' });
 });
 
 router.get('/logout', function(req, res, next) {
@@ -60,9 +55,9 @@ router.get('/logout', function(req, res, next) {
   res.redirect('/');
 });
 
-router.get('/twitter', passport.authenticate('twitter'));
+router.get('/login', passport.authenticate('twitter'));
 
-router.get('/twitter/callback', 
+router.get('/twitter/callback',
   passport.authenticate('twitter', {
     successRedirect: '/',
     failureRedirect: '/auth/login'
