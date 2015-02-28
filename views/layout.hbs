@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title>{{title}}</title>
     <link rel="stylesheet" href="/css/normalize.css" />
     <link rel="stylesheet" href="/css/foundation.css" />
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/foundation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
   </head>
+
   <body>
     <nav class="top-bar" data-topbar role="navigation">
       <ul class="title-area">
@@ -13,11 +19,9 @@
       </ul>
       <section class="top-bar-section">
         <ul class="left">
-          <li><a href="/datasets">Datasets</a></li>
-          <li><a href="/users">Users</a></li>
-          {{# if user }}
-          <li><a href="/upload">Upload</a>
-          {{/if}}
+          <li><a href="/datasets">datasets</a></li>
+          <li><a href="/users">users</a></li>
+          <li><a href="/about">about</a></li>
         </ul>
         <ul class="right">
           {{# if user }}
@@ -34,8 +38,6 @@
       </section>
     </nav>
     {{{body}}}
-    <script src="/js/jquery.js"></script>
-    <script src="/js/foundation.js"></script>
     <script>
       $(function() {
         $(document).foundation();
