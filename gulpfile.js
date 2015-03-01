@@ -1,9 +1,10 @@
 var gulp = require('gulp');
 var bower = require('gulp-bower');
 var react = require('gulp-react');
+var nodemon = require('gulp-nodemon');
 
 gulp.task('default', function() {
-	gulp.start('bower', 'react', 'css', 'js');
+	gulp.start('bower', 'react', 'css', 'js', 'watch');
 });
 
 gulp.task('react', function() {
@@ -32,4 +33,14 @@ gulp.task('js', function() {
       'bower_components/jquery/lib/jquery.min.js',
 		])
 	  .pipe(gulp.dest('public/js/'))
+});
+
+gulp.task('watch', function() {
+	gulp.watch('templates/*', ['react', 'js']);
+	gulp.watch('css/*', ['css'])
+});
+
+gulp.task('develop', function() {
+	nodemon({script: 'bin/www', ext: ['jsx js html css'], ignore: ['./build/**']})
+	  .on('change', ['default'])
 });
