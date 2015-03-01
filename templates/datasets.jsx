@@ -1,6 +1,7 @@
 var UploadDataset = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
+    var that = this;
     $.ajax({
       type: "POST",
       url: "/api/datasets",
@@ -8,7 +9,7 @@ var UploadDataset = React.createClass({
       contentType: "application/json",
       data: JSON.stringify({url: this.refs.url.getDOMNode().value.trim()}),
       success: function(data) {
-        console.log(data);
+        that.props.onUploadSubmit(data);
       }.bind(this),
       error: function(xhr, status, err) {
         console.log("uhoh: " + err);
@@ -46,10 +47,13 @@ var DatasetList = React.createClass({
 });
 
 var DatasetsBox = React.createClass({
+  handleUpload: function(d) {
+    console.log('uploaded: ' + d.url);
+  },
   render: function() {
     return (
       <div id="datasets" className="row large-offset-2 large-8 small-offset-1 small-10">
-        <UploadDataset />
+        <UploadDataset onUploadSubmit={this.handleUpload}/>
         <DatasetList />
       </div>
     );
