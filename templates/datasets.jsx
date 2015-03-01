@@ -1,9 +1,25 @@
 var UploadDataset = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "/api/datasets",
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify({url: this.refs.url.getDOMNode().value.trim()}),
+      success: function(data) {
+        console.log(data);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log("uhoh: " + err);
+      }.bind(this)
+    });
+  },
   render: function() {
     return (
-      <form className="row">
+      <form className="row" onSubmit={this.handleSubmit}>
         <div className="large-11 small-9 columns">
-          <input name="url" type="url" required placeholder="http://example.com/data.csv" />
+          <input ref="url" type="url" required placeholder="http://example.com/data.csv" />
         </div>
         <div className="left large-1 small-1 columns"> 
           <button className="tiny button">add</button>

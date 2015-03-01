@@ -22,7 +22,6 @@ passport.use(new TwitterStrategy({
       if (user) {
         done(null, user);
       } else {
-        console.log(profile);
         user = new User({
           username: profile.username,
           displayName: profile.displayName,

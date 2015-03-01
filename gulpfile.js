@@ -3,8 +3,14 @@ var bower = require('gulp-bower');
 var react = require('gulp-react');
 var nodemon = require('gulp-nodemon');
 
+
 gulp.task('default', function() {
-	gulp.start('bower', 'react', 'css', 'js', 'watch');
+	gulp.start('bower', 'react', 'css', 'js');
+});
+
+gulp.task('develop', function() {
+	nodemon({script: 'bin/www', ext: 'js jsx css hbs', ignore: ['./build/**']})
+	  .on('change', ['default'])
 });
 
 gulp.task('react', function() {
@@ -30,7 +36,8 @@ gulp.task('js', function() {
 		  'bower_components/modernizr/modernizr.js',
 		  'bower_components/fastclick/lib/fastclick.js',
 		  'bower_components/foundation/js/foundation.min.js',
-      'bower_components/jquery/lib/jquery.min.js',
+      'bower_components/jquery/dist/jquery.min.js',
+      "bower_components/react/react.min.js"
 		])
 	  .pipe(gulp.dest('public/js/'))
 });
@@ -38,9 +45,4 @@ gulp.task('js', function() {
 gulp.task('watch', function() {
 	gulp.watch('templates/*', ['react', 'js']);
 	gulp.watch('css/*', ['css'])
-});
-
-gulp.task('develop', function() {
-	nodemon({script: 'bin/www', ext: ['jsx js html css'], ignore: ['./build/**']})
-	  .on('change', ['default'])
 });
