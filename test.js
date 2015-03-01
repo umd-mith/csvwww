@@ -16,8 +16,14 @@ describe('csvw', function() {
 			dataset.loadMetadata(function(err, metadata) {
 			  assert.equal(metadata['dc:title'], "Test Subcollection/HTRC Project - Borden");
 			  assert.equal(dataset.title, "Test Subcollection/HTRC Project - Borden");
+			  assert.equal(dataset.creator, "sapienza");
 			  done();
 			});
+		});
+
+		it('should save csv', function(done) {
+			var dataset = new csvw.Dataset("https://umd-mith.github.io/fla-metadata/1316980598.csv");
+			done();
 		});
 
 	});

@@ -4,10 +4,17 @@ var config = JSON.parse(fs.readFileSync('config.json'));
 
 mongoose.connect(config.mongodb);
 
-module.exports.User = mongoose.model('User', {
+User = mongoose.model('User', {
   username: String,
   name: String,
   avatar: String
 });
 
+Dataset = mongoose.model('Dataset', {
+  title: String,
+  creator: StrinG
+});
+
+module.exports.User = User;
+module.exports.Dataset = Dataset;
 module.exports.mongoose = mongoose;

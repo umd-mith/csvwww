@@ -21,6 +21,8 @@ Dataset.prototype.loadMetadata = function(next) {
 		jsonld.compact(data, context, function(err, compacted) {
 			that.compactedMetadata = compacted;
 			that.title = compacted.title;
+			that.creator = compacted.creator;
+			that.modified = compacted.modified;
 			next(error, data);
 		});
 	});
