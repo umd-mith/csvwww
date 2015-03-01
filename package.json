@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "gulp test"
   },
   "dependencies": {
+    "async": "^0.9.0",
     "body-parser": "~1.10.2",
     "connect-mongo": "^0.7.0",
     "debug": "~2.1.1",
@@ -13,14 +15,17 @@
     "express-session": "^1.10.3",
     "gulp": "^3.8.11",
     "gulp-bower": "0.0.10",
+    "gulp-mocha": "^2.0.0",
     "gulp-nodemon": "^1.0.5",
     "gulp-react": "^2.0.0",
     "gulp-watch": "^4.1.1",
     "hbs": "~2.8.0",
+    "jsonld": "^0.3.22",
     "mongoose": "^3.8.24",
     "morgan": "~1.5.1",
     "passport": "^0.2.1",
     "passport-twitter": "^1.0.2",
+    "request": "^2.53.0",
     "serve-favicon": "~2.2.0"
   }
 }

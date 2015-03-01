@@ -1,5 +1,7 @@
 var gulp = require('gulp');
+var watch = require('gulp-watch');
 var bower = require('gulp-bower');
+var mocha = require('gulp-mocha');
 var react = require('gulp-react');
 var nodemon = require('gulp-nodemon');
 
@@ -14,7 +16,7 @@ gulp.task('develop', function() {
 });
 
 gulp.task('react', function() {
-	return gulp.src('templates/*.jsx')
+	return gulp.src('views/*.jsx')
 	  .pipe(react())
 	  .pipe(gulp.dest('public/js/'));
 });
@@ -45,4 +47,13 @@ gulp.task('js', function() {
 gulp.task('watch', function() {
 	gulp.watch('templates/*', ['react', 'js']);
 	gulp.watch('css/*', ['css'])
+});
+
+gulp.task('test', function() {
+	return gulp.src('test.js')
+	  .pipe(mocha({reporter: 'spec'}))
+});
+
+gulp.task('watch-test', function() {
+	return gulp.watch('*.js', ['test']);
 });

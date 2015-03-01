@@ -16,16 +16,13 @@ router.get('/datasets', function(req, res, next) {
 });
 
 router.post('/datasets', isAuthenticated, function(req, res, next) {
-	res.json(req.body);
-	/*
-	var csvUrl = req.query.url;
+	var csvUrl = req.body.url;
 	if (!csvUrl) {
 		res.status(400);
 		return res.json({"error":"missing csv url query parameter"});
 	}
 	res.status(201);
-  res.json();
-  */
+  res.json({'url': csvUrl});
 });
 
 
