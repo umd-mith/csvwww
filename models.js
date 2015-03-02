@@ -12,7 +12,7 @@ User = mongoose.model('User', {
 
 Dataset = mongoose.model('Dataset', {
   title: String,
-  creator: StrinG
+  creator: String,
 });
 
 module.exports.User = User;
