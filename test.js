@@ -13,6 +13,7 @@ describe('models', function() {
         assert.equal(dataset.metadata['dc:title'], "Test Subcollection/HTRC Project - Borden");
         assert.equal(dataset.title, "Test Subcollection/HTRC Project - Borden");
         assert.equal(dataset.creator, "sapienza");
+        // TODO: test the actual CSV data!
         done();
       });
     });
