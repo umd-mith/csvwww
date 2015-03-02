@@ -26,28 +26,28 @@ var DatasetSchema = new mongoose.Schema({
 
 DatasetSchema.statics.loadFromUrl = function(url, next) {
 
-	var dataset = new Dataset({
-		url: url, 
-		metadataUrl: url + "-metadata.json"
-	});
+  var dataset = new Dataset({
+    url: url, 
+    metadataUrl: url + "-metadata.json"
+  });
 
-	var jsonldContext = {
-		title: "http://purl.org/dc/terms/title",
-		creator: "http://purl.org/dc/terms/creator",
-		modified: "http://purl.org/dc/terms/modified",
-		publisher: "http://purl.org/dc/terms/publisher"
-	};
+  var jsonldContext = {
+    title: "http://purl.org/dc/terms/title",
+    creator: "http://purl.org/dc/terms/creator",
+    modified: "http://purl.org/dc/terms/modified",
+    publisher: "http://purl.org/dc/terms/publisher"
+  };
 
-	request.get(dataset.metadataUrl, {json: true}, function (error, response, metadata) {
-		dataset.metadata = metadata;
-		jsonld.compact(metadata, jsonldContext, function(err, compacted) {
-			dataset.compactedMetadata = compacted;
-			dataset.title = compacted.title;
-			dataset.creator = compacted.creator;
-			dataset.modified = compacted.modified;
-			next(error, dataset);
-		});
-	});
+  request.get(dataset.metadataUrl, {json: true}, function (error, response, metadata) {
+    dataset.metadata = metadata;
+    jsonld.compact(metadata, jsonldContext, function(err, compacted) {
+      dataset.compactedMetadata = compacted;
+      dataset.title = compacted.title;
+      dataset.creator = compacted.creator;
+      dataset.modified = compacted.modified;
+      next(error, dataset);
+    });
+  });
 }
 
 var Dataset = mongoose.model('Dataset', DatasetSchema);

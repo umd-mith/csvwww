@@ -6,55 +6,55 @@ var nodemon = require('gulp-nodemon');
 
 
 gulp.task('default', function() {
-	gulp.start('bower', 'react', 'css', 'js');
+  gulp.start('bower', 'react', 'css', 'js');
 });
 
 gulp.task('develop', function() {
-	nodemon({script: 'bin/www', ext: 'js jsx css hbs', ignore: ['./build/**']})
-	  .on('change', ['default'])
+  nodemon({script: 'bin/www', ext: 'js jsx css hbs', ignore: ['./build/**']})
+    .on('change', ['default']);
 });
 
 gulp.task('react', function() {
-	return gulp.src('views/*.jsx')
-	  .pipe(react())
-	  .pipe(gulp.dest('public/js/'));
+  return gulp.src('views/*.jsx')
+    .pipe(react())
+    .pipe(gulp.dest('public/js/'));
 });
 
 gulp.task('bower', function() {
-	return bower();
+  return bower();
 });
 
 gulp.task('css', function() {
-	return gulp.src([
-		'bower_components/foundation/css/foundation.css',
-		'bower_components/foundation/css/normalize.css',
-		'css/style.css'
-	]).pipe(gulp.dest('public/css/'));
+  return gulp.src([
+    'bower_components/foundation/css/foundation.css',
+    'bower_components/foundation/css/normalize.css',
+    'css/style.css'
+  ]).pipe(gulp.dest('public/css/'));
 });
 
 gulp.task('js', function() {
-	return gulp.src([
-		  'bower_components/modernizr/modernizr.js',
-		  'bower_components/fastclick/lib/fastclick.js',
-		  'bower_components/foundation/js/foundation.min.js',
+  return gulp.src([
+      'bower_components/modernizr/modernizr.js',
+      'bower_components/fastclick/lib/fastclick.js',
+      'bower_components/foundation/js/foundation.min.js',
       'bower_components/jquery/dist/jquery.min.js',
       "bower_components/react/react.min.js"
-		])
-	  .pipe(gulp.dest('public/js/'))
+    ])
+    .pipe(gulp.dest('public/js/'));
 });
 
 gulp.task('watch', function() {
-	gulp.watch('templates/*', ['react', 'js']);
-	gulp.watch('css/*', ['css'])
+  gulp.watch('templates/*', ['react', 'js']);
+  gulp.watch('css/*', ['css']);
 });
 
 gulp.task('test', function() {
-	return gulp.src('test.js')
-	  .pipe(mocha({reporter: 'spec'}))
-	  .once('error', function() {
-	  	process.exit(1);
-	  })
-	  .once('end', function() {
-	  	process.exit();
-	  })
+  return gulp.src('test.js')
+    .pipe(mocha({reporter: 'spec'}))
+    .once('error', function() {
+      process.exit(1);
+    })
+    .once('end', function() {
+      process.exit();
+    });
 });
