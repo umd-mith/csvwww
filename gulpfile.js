@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var watch = require('gulp-watch');
 var bower = require('gulp-bower');
 var mocha = require('gulp-mocha');
 var react = require('gulp-react');
@@ -52,8 +51,10 @@ gulp.task('watch', function() {
 gulp.task('test', function() {
 	return gulp.src('test.js')
 	  .pipe(mocha({reporter: 'spec'}))
-});
-
-gulp.task('watch-test', function() {
-	return gulp.watch('*.js', ['test']);
+	  .once('error', function() {
+	  	process.exit(1);
+	  })
+	  .once('end', function() {
+	  	process.exit();
+	  })
 });
