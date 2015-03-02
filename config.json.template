@@ -1,6 +1,6 @@
 {
   "twitterConsumerKey": "",
   "twitterConsumerSecret": "",
-  "twitterCallbackUrl": "http://localhost:3000/auth/twitter/callback"
-  "mongodb": "mongodb://localhost/csvhub",
+  "twitterCallbackUrl": "http://localhost:3000/auth/twitter/callback",
+  "mongodb": "mongodb://localhost/csvhub"
 }
