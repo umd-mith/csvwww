@@ -4,7 +4,7 @@ var jsonld = require('jsonld');
 var request = require('request');
 var mongoose = require('mongoose');
 
-var config = JSON.parse(fs.readFileSync('config.json'));
+var config = require('./config.json');
 
 mongoose.connect(config.mongodb);
 

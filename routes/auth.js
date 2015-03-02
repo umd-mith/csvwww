@@ -5,7 +5,7 @@ var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
 var User = require('../models.js').User;
-var config = JSON.parse(fs.readFileSync('config.json'));
+var config = require('../config.json');
 
 passport.use(new TwitterStrategy({
     consumerKey: config.twitterConsumerKey,
