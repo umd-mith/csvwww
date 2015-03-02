@@ -55,6 +55,6 @@ gulp.task('test', function() {
       process.exit(1);
     })
     .once('end', function() {
-      process.exit();
+      process.exit(0);
     });
 });
