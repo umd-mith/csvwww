@@ -4,7 +4,6 @@ var mocha = require('gulp-mocha');
 var react = require('gulp-react');
 var nodemon = require('gulp-nodemon');
 
-
 gulp.task('default', function() {
   gulp.start('bower', 'react', 'css', 'js');
 });
