@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/edsu/csvhub.svg)](http://travis-ci.org/edsu/csvhub)
+[![Build Status](https://travis-ci.org/umd-mith/csvhub.svg)](http://travis-ci.org/umd-mith/csvhub)
 
 A webapp that lets you load in CSVW datasets, and publish changes to them. 
 
