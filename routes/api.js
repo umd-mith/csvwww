@@ -23,11 +23,12 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
     return res.json({"error":"missing csv url query parameter"});
   }
   Dataset.newFromUrl(csvUrl, function(err, dataset) {
+    dataset.user = req.user.username;
+    dataset.save();
     res.status(201);
     res.set('Location', '/dataset/' + dataset._id);
-    res.json({'url': csvUrl});
+    res.json(dataset);
   });
 });
-
 
 module.exports = router;

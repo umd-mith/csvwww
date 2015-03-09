@@ -32,8 +32,12 @@ var UploadDataset = React.createClass({
 
 var Dataset = React.createClass({
   render: function() {
+    var d = this.props.dataset;
     return (
-      <li>{ this.props.title }</li>
+      <tr>
+        <td><a href={"/dataset/" +  d._id }>{ d.title }</a></td>
+        <td><a href={"/user/" + d.creator }>{ d.creator }</a></td>
+      </tr>
     );
   }
 });
@@ -42,13 +46,13 @@ var DatasetList = React.createClass({
   render: function() {
     var datasetNodes = this.props.data.map(function (dataset) {
       return (
-        <Dataset title={dataset.title} />
+        <Dataset dataset={dataset} />
       )
     });
     return (
-      <ul>
+      <table className="large-12">
         {datasetNodes}
-      </ul>
+      </table>
     );
   }
 });
@@ -58,7 +62,7 @@ var DatasetsBox = React.createClass({
     return {data: []};
   },
   handleUpload: function(d) {
-    console.log('uploaded: ' + d.url);
+    this.loadDatasets();
   },
   loadDatasets: function() {
     $.ajax({
@@ -87,6 +91,6 @@ var DatasetsBox = React.createClass({
 });
 
 React.render(
-  <DatasetsBox url="/api/datasets" pollInterval={2000} />,
+  <DatasetsBox url="/api/datasets" pollInterval={20000} />,
   document.getElementById('datasets')
 );
