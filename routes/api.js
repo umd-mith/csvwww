@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var models = require('../models.js');
-var Dataset = models.Dataset;
+var Dataset = require('../models').Dataset;
 
 function isAuthenticated(req, res, next) {
   if (! req.isAuthenticated()) {
@@ -12,7 +11,9 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/datasets', function(req, res, next) {
-  res.json([]);
+  Dataset.find(function(err, datasets) {
+    res.json(datasets);
+  });
 });
 
 router.post('/datasets', isAuthenticated, function(req, res, next) {
@@ -21,8 +22,11 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
     res.status(400);
     return res.json({"error":"missing csv url query parameter"});
   }
-  res.status(201);
-  res.json({'url': csvUrl});
+  Dataset.newFromUrl(csvUrl, function(err, dataset) {
+    res.status(201);
+    res.set('Location', '/dataset/' + dataset._id);
+    res.json({'url': csvUrl});
+  });
 });
 
 

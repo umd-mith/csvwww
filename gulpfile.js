@@ -3,6 +3,8 @@ var bower = require('gulp-bower');
 var mocha = require('gulp-mocha');
 var react = require('gulp-react');
 var nodemon = require('gulp-nodemon');
+var rimraf = require('rimraf');
+var models = require('./models')
 
 gulp.task('default', function() {
   gulp.start('bower', 'react', 'css', 'js');
@@ -50,10 +52,20 @@ gulp.task('watch', function() {
 gulp.task('test', function() {
   return gulp.src('test.js')
     .pipe(mocha({reporter: 'spec'}))
-    .once('error', function() {
+    .once('error', function(e) {
+      console.log(e);
       process.exit(1);
     })
     .once('end', function() {
       process.exit(0);
     });
+});
+
+gulp.task('reset', function() {
+  var config = require('./config.json');
+  models.mongoose.connect(config.mongodb, function() {
+    models.mongoose.connection.db.dropDatabase();
+    rimraf.sync('data/*csv*')
+    process.exit(0);
+  });
 });

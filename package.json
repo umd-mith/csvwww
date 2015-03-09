@@ -22,11 +22,14 @@
     "gulp-watch": "^4.1.1",
     "hbs": "~2.8.0",
     "jsonld": "^0.3.22",
+    "mocha": "^2.2.0",
+    "mongodb": "^1.4.33",
     "mongoose": "^3.8.24",
     "morgan": "~1.5.1",
     "passport": "^0.2.1",
     "passport-twitter": "^1.0.2",
     "request": "^2.53.0",
+    "rimraf": "^2.3.1",
     "serve-favicon": "~2.2.0"
   }
 }

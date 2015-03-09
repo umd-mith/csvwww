@@ -14,6 +14,9 @@ var users = require('./routes/users');
 var api = require('./routes/api');
 var datasets = require('./routes/datasets');
 
+var config = require('./config.json');
+models.mongoose.connect(config.mongodb);
+
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
