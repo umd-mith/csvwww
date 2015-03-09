@@ -25,14 +25,12 @@ app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
-
 app.use(session({
   store: new MongoStore({mongooseConnection: models.mongoose.connection }),
   secret: 'mySecretKey',
   resave: false,
   saveUninitialized: false
 }));
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -57,10 +55,6 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-
-
-// error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -72,8 +66,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
-
 
 // production error handler
 // no stacktraces leaked to user
