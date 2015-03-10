@@ -39,7 +39,7 @@ describe('models', function() {
         // make sure the dataset was saved to mongo
         var id = dataset._id;
         assert(id);
-        models.Dataset.findOne({_id: id}, function(err, d) {
+        models.Dataset.findById(id, function(err, d) {
           assert(!err);
           assert.equal(d.title, "Test Subcollection/HTRC Project - Borden")
           done();
