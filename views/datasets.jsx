@@ -35,8 +35,8 @@ var Dataset = React.createClass({
     var d = this.props.dataset;
     return (
       <tr>
-        <td><a href={"/dataset/" +  d._id }>{ d.title }</a></td>
-        <td><a href={"/user/" + d.creator }>{ d.creator }</a></td>
+        <td><a href={"/datasets/" +  d._id }>{ d.title }</a></td>
+        <td><a href={"/users/" + d.creator }>{ d.creator }</a></td>
       </tr>
     );
   }
