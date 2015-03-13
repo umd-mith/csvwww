@@ -31,4 +31,25 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
   });
 });
 
+router.get('/datasets/:id', function(req, res, next) {
+	Dataset.findById(req.params.id, function(err, dataset) {
+		if (dataset) {
+      res.json(dataset);
+		} else {
+			res.send(404);
+		}
+	});
+});
+
+router.get('/datasets/:id.csv', function(req, res, next) {
+	Dataset.findById(req.params.id, function(err, dataset) {
+		if (dataset) {
+      var v = dataset.versions[dataset.versions.length - 1];
+      res.sendfile(v.csvFilename);
+		} else {
+			res.send(404);
+		}
+	});
+});
+
 module.exports = router;
