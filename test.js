@@ -22,19 +22,18 @@ describe('models', function() {
 
   describe('Dataset', function() {
 
-    it('newFromUrl', function(done) {
-      this.timeout(5000);
+    it('new from csv', function(done) {
+      this.timeout(15000);
       var url = "https://umd-mith.github.io/fla-metadata/1316980598.csv";
       var dataset = new models.Dataset.newFromUrl(url, function(err, dataset) {
-        assert.equal(dataset.url, "https://umd-mith.github.io/fla-metadata/1316980598.csv");
-        assert.equal(dataset.metadataUrl, "https://umd-mith.github.io/fla-metadata/1316980598.csv-metadata.json");
-        assert.equal(dataset.metadata['dc:title'], "Test Subcollection/HTRC Project - Borden");
+        assert.equal(err, null);
+        assert.equal(dataset.derivedFrom, "https://umd-mith.github.io/fla-metadata/1316980598.csv-metadata.json");
+        assert.equal(dataset.distribution.derivedFrom, "https://umd-mith.github.io/fla-metadata/1316980598.csv");
+        assert(dataset.distribution.downloadURL);
         assert.equal(dataset.title, "Test Subcollection/HTRC Project - Borden");
         assert.equal(dataset.creator, "sapienza");
-
-        assert.equal(dataset.versions.length, 1);
-        assert(fs.statSync(dataset.versions[0].csvFilename));
-        assert(fs.statSync(dataset.versions[0].csvwFilename));
+        assert.equal(dataset.version, 0);
+        assert(fs.statSync(dataset.latestCsv()));
 
         // make sure the dataset was saved to mongo
         var id = dataset._id;
@@ -47,6 +46,10 @@ describe('models', function() {
 
       });
 
+    });
+
+    it('new from csv without csvw', function(done) {
+      done();
     });
 
   });

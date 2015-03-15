@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var Dataset = require('../models').Dataset;
+var models = require('../models');
+var Dataset = models.Dataset;
 
 function isAuthenticated(req, res, next) {
   if (! req.isAuthenticated()) {
@@ -34,7 +35,7 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
 router.get('/datasets/:id', function(req, res, next) {
 	Dataset.findById(req.params.id, function(err, dataset) {
 		if (dataset) {
-      res.json(dataset);
+      res.json(dataset.toJsonLd());
 		} else {
 			res.send(404);
 		}
@@ -44,12 +45,15 @@ router.get('/datasets/:id', function(req, res, next) {
 router.get('/datasets/:id.csv', function(req, res, next) {
 	Dataset.findById(req.params.id, function(err, dataset) {
 		if (dataset) {
-      var v = dataset.versions[dataset.versions.length - 1];
-      res.sendfile(v.csvFilename);
+      res.sendfile(data.latestCsv());
 		} else {
 			res.send(404);
 		}
 	});
+});
+
+router.get('/context', function(req, res, next) {
+  res.json(models.context);
 });
 
 module.exports = router;
