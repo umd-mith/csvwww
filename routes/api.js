@@ -12,9 +12,11 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/datasets', function(req, res, next) {
-  Dataset.find(function(err, datasets) {
-    res.json(datasets);
-  });
+  Dataset.find()
+    .sort('-created')
+    .exec(function(err, datasets) {
+      res.json(datasets);
+    });
 });
 
 router.post('/datasets', isAuthenticated, function(req, res, next) {
@@ -24,7 +26,11 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
     return res.json({"error":"missing csv url query parameter"});
   }
   Dataset.newFromUrl(csvUrl, function(err, dataset) {
-    dataset.user = req.user.username;
+    if (err) {
+      res.status(400);
+      return res.json({"error": err});
+    }
+    dataset.creator = req.user.username;
     dataset.save();
     res.status(201);
     res.set('Location', '/dataset/' + dataset._id);

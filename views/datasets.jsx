@@ -2,17 +2,29 @@ var UploadDataset = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var that = this;
+    var urlInput = this.refs.url.getDOMNode();
     $.ajax({
       type: "POST",
       url: "/api/datasets",
       dataType: "json",
       contentType: "application/json",
-      data: JSON.stringify({url: this.refs.url.getDOMNode().value.trim()}),
+      data: JSON.stringify({url: urlInput.value.trim()}),
       success: function(data) {
+        urlInput.value = '';
         that.props.onUploadSubmit(data);
       }.bind(this),
       error: function(xhr, status, err) {
-        console.log("uhoh: " + err);
+        try {
+          var e = JSON.parse(xhr.responseText);
+          // using the placeholder text for an error is a bit of an aboomination, sigh
+          var oldPlaceholder = urlInput.getAttribute('placeholder');
+          urlInput.value = '';
+          urlInput.setAttribute('placeholder', e.error);
+          setTimeout(function() {urlInput.setAttribute('placeholder', oldPlaceholder)}, 5000);
+        } catch(error) {
+          console.log(error);
+          console.log("error API response is not JSON: " + xhr.responseText);
+        }
       }.bind(this)
     });
   },
@@ -20,10 +32,10 @@ var UploadDataset = React.createClass({
     return (
       <form className="row" onSubmit={this.handleSubmit}>
         <div className="large-11 small-9 columns">
-          <input ref="url" type="url" required placeholder="http://example.com/data.csv" />
+          <input ref="url" type="url" required placeholder="Please enter a URL for a CSV file" />
         </div>
         <div className="left large-1 small-1 columns"> 
-          <button className="tiny button">add</button>
+          <button ref="addButton" className="tiny button">add</button>
         </div>
       </form>
     );
@@ -33,8 +45,12 @@ var UploadDataset = React.createClass({
 var Dataset = React.createClass({
   render: function() {
     var d = this.props.dataset;
+    var modified = new Date(d.modified);
+    modified = modified.toLocaleDateString() + " " + modified.toLocaleTimeString();
+    //modified = modified.toLocaleDateString() + " " + modified.toLocaleTimeString();
     return (
-      <tr>
+      <tr id={"dataset-" + d._id}>
+        <td>{ modified }</td>
         <td><a href={"/datasets/" +  d._id }>{ d.title }</a></td>
         <td><a href={"/users/" + d.creator }>{ d.creator }</a></td>
       </tr>
@@ -44,6 +60,7 @@ var Dataset = React.createClass({
 
 var DatasetList = React.createClass({
   render: function() {
+    console.log(this.props.newDataset);
     var datasetNodes = this.props.data.map(function (dataset) {
       return (
         <Dataset dataset={dataset} />
@@ -62,9 +79,10 @@ var DatasetsBox = React.createClass({
     return {data: []};
   },
   handleUpload: function(d) {
+    this.setState({newDataset: d._id});
     this.loadDatasets();
   },
-  loadDatasets: function() {
+  loadDatasets: function(next) {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -84,7 +102,7 @@ var DatasetsBox = React.createClass({
     return (
       <div id="datasets" className="row large-offset-2 large-8 small-offset-1 small-10">
         <UploadDataset onUploadSubmit={this.handleUpload}/>
-        <DatasetList data={this.state.data} />
+        <DatasetList data={this.state.data} newDataset={this.state.newDataset} />
       </div>
     );
   }

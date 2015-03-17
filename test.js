@@ -25,7 +25,7 @@ describe('models', function() {
     it('new from csv', function(done) {
       this.timeout(15000);
       var url = "https://umd-mith.github.io/fla-metadata/1316980598.csv";
-      var dataset = new models.Dataset.newFromUrl(url, function(err, dataset) {
+      models.Dataset.newFromUrl(url, function(err, dataset) {
         assert.equal(err, null);
         assert.equal(dataset.derivedFrom, "https://umd-mith.github.io/fla-metadata/1316980598.csv-metadata.json");
         assert.equal(dataset.distribution.derivedFrom, "https://umd-mith.github.io/fla-metadata/1316980598.csv");
@@ -49,9 +49,24 @@ describe('models', function() {
     });
 
     it('new from csv without csvw', function(done) {
-      done();
+      var url = 'https://data.ok.gov/api/views/jk65-dhyi/rows.csv?accessType=DOWNLOAD';
+      models.Dataset.newFromUrl(url, function(err, dataset) {
+        assert.equal(err, null);
+        assert(dataset.title);
+        assert.equal(dataset.derivedFrom, null);
+        assert.equal(dataset.distribution.derivedFrom, url);
+        done();
+      });
+    });
+
+    it('new from missing csv', function(done) {
+      var url = 'http://example.com/no-csv-here';
+      models.Dataset.newFromUrl(url, function(err, dataset) {
+        assert(err); 
+        done();
+      });
     });
 
   });
 
-})
+});

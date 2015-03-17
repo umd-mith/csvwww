@@ -11,6 +11,8 @@
     "body-parser": "~1.10.2",
     "connect-mongo": "^0.7.0",
     "csv": "^0.4.1",
+    "csv-parse": "0.0.9",
+    "csv-parser": "^1.5.0",
     "debug": "~2.1.1",
     "express": "~4.11.1",
     "express-session": "^1.10.3",

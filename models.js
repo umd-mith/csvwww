@@ -4,6 +4,7 @@ var async = require('async');
 var jsonld = require('jsonld');
 var request = require('request');
 var mongoose = require('mongoose');
+var csvParser = require('csv-parse');
 
 var config = require('./config.json');
 
@@ -17,8 +18,8 @@ var DatasetSchema = new mongoose.Schema({
   url: String,
   title: String,
   creator: String,
-  created: String,
-  modified: String,
+  created: Date,
+  modified: Date,
   publisher: Object,
   derivedFrom: String,
   distribution: Object,
@@ -54,6 +55,10 @@ var context = {
   }
 };
 
+/*
+ * Pass in a CSV URL and get back a dataset object for it.
+ */
+
 DatasetSchema.statics.newFromUrl = function(url, next) {
 
   var frame = {
@@ -66,29 +71,39 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
 
   request
     .get(url)
-    .on('response', function() {
+    .on('response', function(response) {
+
+      if (response.statusCode != 200) {
+        return next("CSV does not exist at " + url, null);
+      }
+
+      // save the metadata 
       // TODO: also look at response Link header and also for metadata.json
       var metadataUrl = url + "-metadata.json";
       request.get(metadataUrl, {json: true}, function (error, response, metadata) {
         jsonld.frame(metadata, frame, function(error, framed) {
-          if (error) {
-            console.error(error);
-            return next(error, null)
+          if (response.statusCode != 200 || error) {
+            var dataset = new Dataset();
+            dataset.title = "Dataset " + datasetId;
+          } else {
+            var dataset = new Dataset(framed["@graph"][0]);
+            dataset.derivedFrom = metadataUrl;
           }
-          var g = framed["@graph"][0];
-          var dataset = new Dataset(g);
           dataset._id = datasetId;
           dataset.distribution = {
             derivedFrom: url,
             downloadURL: '/api/datasets/' + datasetId + '.csv'
           };
-          dataset.derivedFrom = metadataUrl;
           dataset.version = 0;
+          dataset.created = new Date();
+          dataset.modified = new Date();
           dataset.save(next);
         });
       });
+
+      // save the csv
+      response.pipe(fs.createWriteStream(csvFilename));
     })
-    .pipe(fs.createWriteStream(csvFilename));
 }
 
 DatasetSchema.methods.latestCsv = function() {
