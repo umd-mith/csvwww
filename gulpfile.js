@@ -41,7 +41,8 @@ gulp.task('js', function() {
       'bower_components/foundation/js/foundation.min.js',
       'bower_components/jquery/dist/jquery.min.js',
       'bower_components/jquery/dist/jquery.min.map',
-      "bower_components/react/react.min.js"
+      "bower_components/react/react.min.js",
+      "bower_components/papaparse/papaparse.min.js"
     ])
     .pipe(gulp.dest('public/js/'));
 });

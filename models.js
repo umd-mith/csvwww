@@ -4,7 +4,6 @@ var async = require('async');
 var jsonld = require('jsonld');
 var request = require('request');
 var mongoose = require('mongoose');
-var csvParser = require('csv-parse');
 
 var config = require('./config.json');
 
@@ -117,7 +116,8 @@ DatasetSchema.methods.toJsonLd = function() {
   d.url = '/datasets/' + d._id;
   delete d._id;
   delete d.__v;
-  return(d);
+
+  return d;
 }
 
 var Dataset = mongoose.model('Dataset', DatasetSchema);

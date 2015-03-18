@@ -44,6 +44,10 @@ describe('models', function() {
           done();
         });
 
+        var j = dataset.toJsonLd();
+        assert(j['@context']);
+        assert(j['@id']);
+        assert.equal(j.title, "Test Subcollection/HTRC Project - Borden");
       });
 
     });

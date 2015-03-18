@@ -38,20 +38,20 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
   });
 });
 
+router.get('/datasets/:id.csv', function(req, res, next) {
+  Dataset.findById(req.params.id, function(err, dataset) {
+    if (dataset) {
+      res.sendFile(dataset.latestCsv());
+    } else {
+      res.send(404);
+    }
+  });
+});
+
 router.get('/datasets/:id', function(req, res, next) {
 	Dataset.findById(req.params.id, function(err, dataset) {
 		if (dataset) {
       res.json(dataset.toJsonLd());
-		} else {
-			res.send(404);
-		}
-	});
-});
-
-router.get('/datasets/:id.csv', function(req, res, next) {
-	Dataset.findById(req.params.id, function(err, dataset) {
-		if (dataset) {
-      res.sendfile(data.latestCsv());
 		} else {
 			res.send(404);
 		}
