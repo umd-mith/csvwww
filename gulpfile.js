@@ -42,7 +42,8 @@ gulp.task('js', function() {
       'bower_components/jquery/dist/jquery.min.js',
       'bower_components/jquery/dist/jquery.min.map',
       "bower_components/react/react.min.js",
-      "bower_components/papaparse/papaparse.min.js"
+      "bower_components/papaparse/papaparse.min.js",
+      "bower_components/reactable/build/reactable.js"
     ])
     .pipe(gulp.dest('public/js/'));
 });

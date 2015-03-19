@@ -50,9 +50,9 @@ var Dataset = React.createClass({
     //modified = modified.toLocaleDateString() + " " + modified.toLocaleTimeString();
     return (
       <tr id={"dataset-" + d._id}>
-        <td>{ modified }</td>
+        <td className="hide-for-small">{ modified }</td>
         <td><a href={"/datasets/" +  d._id }>{ d.title }</a></td>
-        <td><a href={"/users/" + d.creator }>{ d.creator }</a></td>
+        <td className="hide-for-small"><a href={"/users/" + d.creator }>{ d.creator }</a></td>
       </tr>
     );
   }

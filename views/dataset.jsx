@@ -1,3 +1,5 @@
+var Table = Reactable.Table;
+
 var DatasetMetadata = React.createClass({
 	getInitialState: function() {
 		return {};
@@ -24,50 +26,15 @@ var DatasetMetadata = React.createClass({
 	}
 });
 
-var DatasetTable = React.createClass({
-	getInitialState: function() {
-		console.log('init');
-		return {rows: []};
-	},
-	componentDidMount: function() {
-		return this.load();
-	},
-	load: function() {
-		var url = 'http://localhost:3000/api/datasets/' + this.props.datasetId + '.csv';
-		var complete = function(results, file) {
-			this.setState({rows: results.data});	
-		}.bind(this);
-		Papa.parse(url, {complete: complete, download: true, fast: true});
-	},
-	render: function() {
-		console.log('starting render');
-		var rows = this.state.rows.map(function(row) {
-			var cells = row.map(function(cell) {
-				return (
-					<td>{cell}</td>
-				);
-			});
-			return (
-				<tr>{cells}</tr>
-			);
-		});
-		var table = (
-			<table>
-			{rows}
-			</table>
+function addDataset(datasetId) {
+	var url = '/api/datasets/' + datasetId + '.csv';
+	Papa.parse(url, {header: true, download: true, complete: function(results, parser) {
+		React.render(
+		  <div className="tableDetail row large-12 small-offset-1 small-10">
+			  <DatasetMetadata datasetId={ datasetId } />
+			  <Table className="table" data={results.data} itemsPerPage={100} sortable={true} />
+			</div>,
+		  document.getElementById('dataset')
 		);
-		console.log('finished render');
-		return table;
-	}
-});
-
-
-function addDataset(id) {
-	React.render(
-		<div>
-		  <DatasetMetadata datasetId={ id } />
-		  <DatasetTable datasetId={ id } />
-	  </div>,
-	  document.getElementById('dataset')
-	);
+	}});
 }
