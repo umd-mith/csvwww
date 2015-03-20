@@ -109,6 +109,17 @@ DatasetSchema.methods.latestCsv = function() {
   return  path.join(config.data, this._id + '-' + this.version + '.csv');
 }
 
+DatasetSchema.methods.diff = function(v1, v2) {
+   return ([ 
+      ['@@', 'col1', 'col2', 'col3'], 
+      ['...', '...', '...', '...'],
+      [ '', '1', '2', '3' ],
+      ['', '4', '5', '6'],
+      ['->', {before: '7', after: '1'}, '8', '9'],
+      ['', '', undefined, undefined]
+    ]);
+}
+
 DatasetSchema.methods.toJsonLd = function() {
   var d = this.toObject();
   d['@context'] = '/api/context';

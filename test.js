@@ -53,6 +53,8 @@ describe('models', function() {
     });
 
     it('new from csv without csvw', function(done) {
+      this.timeout(15000);
+
       var url = 'https://data.ok.gov/api/views/jk65-dhyi/rows.csv?accessType=DOWNLOAD';
       models.Dataset.newFromUrl(url, function(err, dataset) {
         assert.equal(err, null);
@@ -64,11 +66,36 @@ describe('models', function() {
     });
 
     it('new from missing csv', function(done) {
+      this.timeout(15000);
+
       var url = 'http://example.com/no-csv-here';
       models.Dataset.newFromUrl(url, function(err, dataset) {
         assert(err); 
         done();
       });
+    });
+
+    it('diff', function(done) {
+      var d = new models.Dataset();
+
+      d.version = 0;
+      fs.writeFileSync(d.latestCsv(), 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9');
+      d.save();
+
+      d.version = 1;
+      fs.writeFileSync(d.latestCsv(), 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9');
+      d.save();
+
+      var diff = d.diff(0, 1);
+      assert.deepEqual(diff, [ 
+        ['@@', 'col1', 'col2', 'col3'], 
+        ['...', '...', '...', '...'],
+        [ '', '1', '2', '3' ],
+        ['', '4', '5', '6'],
+        ['->', {before: '7', after: '1'}, '8', '9'],
+        ['', '', undefined, undefined]
+      ]);
+      done();
     });
 
   });

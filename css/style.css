@@ -2,15 +2,24 @@
   margin-top: 20px;
 }
 
-.tableDetail {
-	overflow-x: scroll;
+#dataset-metadata {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-table {
-	padding: 0px;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 0px;
-	padding-right: 0px;
+#table-detail {
+  margin-left: 3%;
+  margin-right: 3%;
+  width: 94%;
+  overflow-x: scroll;
 }
+
+table th :hover {
+  cursor: crosshair; 
+}
+
+#table-detail td {
+  font-size: smaller;
+}
+
 
