@@ -41,7 +41,7 @@ router.post('/datasets', isAuthenticated, function(req, res, next) {
 router.get('/datasets/:id.csv', function(req, res, next) {
   Dataset.findById(req.params.id, function(err, dataset) {
     if (dataset) {
-      res.sendFile(dataset.latestCsv());
+      res.sendFile(dataset.csv());
     } else {
       res.send(404);
     }

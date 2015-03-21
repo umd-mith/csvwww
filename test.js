@@ -33,7 +33,7 @@ describe('models', function() {
         assert.equal(dataset.title, "Test Subcollection/HTRC Project - Borden");
         assert.equal(dataset.creator, "sapienza");
         assert.equal(dataset.version, 0);
-        assert(fs.statSync(dataset.latestCsv()));
+        assert(fs.statSync(dataset.csv()));
 
         // make sure the dataset was saved to mongo
         var id = dataset._id;
@@ -79,17 +79,16 @@ describe('models', function() {
       var d = new models.Dataset();
 
       d.version = 0;
-      fs.writeFileSync(d.latestCsv(), 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9');
+      fs.writeFileSync(d.csv(), 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9\n');
       d.save();
 
       d.version = 1;
-      fs.writeFileSync(d.latestCsv(), 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9');
+      fs.writeFileSync(d.csv(), 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9\n');
       d.save();
 
       var diff = d.diff(0, 1);
       assert.deepEqual(diff, [ 
         ['@@', 'col1', 'col2', 'col3'], 
-        ['...', '...', '...', '...'],
         [ '', '1', '2', '3' ],
         ['', '4', '5', '6'],
         ['->', {before: '7', after: '1'}, '8', '9'],

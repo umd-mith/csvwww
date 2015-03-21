@@ -1,9 +1,11 @@
 var fs = require('fs');
+var daff = require('daff');
 var path = require('path');
 var async = require('async');
 var jsonld = require('jsonld');
 var request = require('request');
 var mongoose = require('mongoose');
+var babyparse = require('babyparse')
 
 var config = require('./config.json');
 
@@ -105,19 +107,29 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
     })
 }
 
-DatasetSchema.methods.latestCsv = function() {
-  return  path.join(config.data, this._id + '-' + this.version + '.csv');
+DatasetSchema.methods.csv = function(v) {
+  if (v == null) v = this.version;
+  return  path.join(config.data, this._id + '-' + v + '.csv');
 }
 
 DatasetSchema.methods.diff = function(v1, v2) {
-   return ([ 
-      ['@@', 'col1', 'col2', 'col3'], 
-      ['...', '...', '...', '...'],
-      [ '', '1', '2', '3' ],
-      ['', '4', '5', '6'],
-      ['->', {before: '7', after: '1'}, '8', '9'],
-      ['', '', undefined, undefined]
-    ]);
+  var f1 = this.csv(v1);
+  var f2 = this.csv(v2);
+
+  var t1 = new daff.TableView(babyparse.parse(fs.readFileSync(f1, 'utf8')).data);
+  var t2 = new daff.TableView(babyparse.parse(fs.readFileSync(f2, 'utf8')).data);
+
+  var alignment = daff.compareTables(t1, t2).align();
+  var dataDiff = [];
+  var tableDiff = new daff.TableView(dataDiff);
+
+  var flags = new daff.CompareFlags();
+  flags.allow_nested_cells = true;
+  flags.show_unchanged = true;
+  var highlighter = new daff.TableDiff(alignment, flags);
+  highlighter.hilite(tableDiff);
+
+  return dataDiff;
 }
 
 DatasetSchema.methods.toJsonLd = function() {
