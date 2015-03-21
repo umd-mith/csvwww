@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "^0.9.0",
+    "babyparse": "^0.4.3",
     "body-parser": "~1.10.2",
     "connect-mongo": "^0.7.0",
     "daff": "^1.2.6",
