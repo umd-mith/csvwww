@@ -26,9 +26,12 @@ var DatasetSchema = new mongoose.Schema({
   distribution: Object,
   tableSchema: Object,
   version: Number,
+  notes: Array
 });
 
 var context = {
+
+  // namespaces
   csvw: "http://www.w3.org/ns/csvw#",
   rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
   rdfs: "http://www.w3.org/2000/01/rdf-schema#",
@@ -37,6 +40,9 @@ var context = {
   dcat: "http://www.w3.org/ns/dcat#",
   prov: "http://www.w3.org/ns/prov#",
   schema: "http://schema.org",
+  oa: "http://www.w3.org/ns/oa#",
+
+  // terms
   title: "dc:title",
   creator: "dc:creator",
   publisher: "dc:publisher",
@@ -45,6 +51,10 @@ var context = {
   name: "schema:name",
   url: "schema:url",
   tableSchema: "csvw:tableSchema",
+  body: "oa:hasBody",
+  source: "oa:hasSource",
+  target: "oa:hasTarget",
+  motivation: "oa:motivatedBy",
   distribution: {
     "@id": "dcat:distribution"
   },
@@ -105,6 +115,49 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
       // save the csv
       response.pipe(fs.createWriteStream(csvFilename));
     })
+}
+
+DatasetSchema.methods.addCsv = function(filename, comment, next) {
+  var nextVersion = this.version == null ? 0 : this.version + 1;
+  var that = this;
+
+  var inFile = fs.createReadStream(filename);
+  inFile.on('error', function() {
+    next(err, null);
+  });
+
+  var outFile = fs.createWriteStream(this.csv(nextVersion));
+  outFile.on('error', function() {
+    next(err, null);
+  });
+
+  outFile.on('close', function() {
+    that.version = nextVersion;
+
+    if (that.version != 0) {
+      that.notes.push({
+        'created': 'foo',
+        'creator': 'foo',
+        'motivation': 'oa:editing',
+        'description': comment,
+        'body': {
+          'text': '1'
+        },
+        'target': ['/api/datasets/' + that._id + '/v0#cell=3,1']
+      });
+    }
+
+    that.save(function(err, dataset) {
+      if (err) {
+        next(err, null);
+      } else {
+        next(null, dataset);
+      }
+    });
+
+  });
+
+  inFile.pipe(outFile);
 }
 
 DatasetSchema.methods.csv = function(v) {

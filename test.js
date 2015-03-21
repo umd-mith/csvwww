@@ -22,7 +22,7 @@ describe('models', function() {
 
   describe('Dataset', function() {
 
-    it('new from csv', function(done) {
+    it('can be created from a url', function(done) {
       this.timeout(15000);
       var url = "https://umd-mith.github.io/fla-metadata/1316980598.csv";
       models.Dataset.newFromUrl(url, function(err, dataset) {
@@ -52,7 +52,7 @@ describe('models', function() {
 
     });
 
-    it('new from csv without csvw', function(done) {
+    it('can be created without csvw metadata', function(done) {
       this.timeout(15000);
 
       var url = 'https://data.ok.gov/api/views/jk65-dhyi/rows.csv?accessType=DOWNLOAD';
@@ -65,7 +65,7 @@ describe('models', function() {
       });
     });
 
-    it('new from missing csv', function(done) {
+    it('handles being created from nonexistant csv', function(done) {
       this.timeout(15000);
 
       var url = 'http://example.com/no-csv-here';
@@ -75,26 +75,59 @@ describe('models', function() {
       });
     });
 
-    it('diff', function(done) {
+    it('can be diffed', function(done) {
+      var d = new models.Dataset();
+      fs.writeFileSync('test-data/temp.csv', 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9\n');
+      d.addCsv('test-data/temp.csv', 'initial', function(err, fn) {
+        fs.writeFileSync('test-data/temp.csv', 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9\n');
+        d.addCsv('test-data/temp.csv', 'test annotation', function(err, fn) {
+          var diff = d.diff(0, 1);
+          assert.deepEqual(diff, [ 
+            ['@@', 'col1', 'col2', 'col3'], 
+            [ '', '1', '2', '3' ],
+            ['', '4', '5', '6'],
+            ['->', {before: '7', after: '1'}, '8', '9'],
+            ['', '', undefined, undefined]
+          ]);
+          done();
+        });
+      });
+    });
+
+    it('can be annotated', function(done) {
       var d = new models.Dataset();
 
-      d.version = 0;
-      fs.writeFileSync(d.csv(), 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9\n');
-      d.save();
+      fs.writeFileSync('test-data/temp.csv', 'col1,col2,col3\n1,2,3\n4,5,6\n7,8,9\n');
+      d.addCsv('test-data/temp.csv', 'initial', function(err, fn) {
+        assert(! err);
+        assert(fn);
+        assert.equal(d.version, 0);
+        assert.equal(d.notes.length, 0);
 
-      d.version = 1;
-      fs.writeFileSync(d.csv(), 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9\n');
-      d.save();
+        fs.writeFileSync('test-data/temp.csv', 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9\n');
+        d.addCsv('test-data/temp.csv', 'test annotation', function(err, fn) {
+          assert(! err);
+          assert(fn);
+          assert.equal(d.version, 1);
 
-      var diff = d.diff(0, 1);
-      assert.deepEqual(diff, [ 
-        ['@@', 'col1', 'col2', 'col3'], 
-        [ '', '1', '2', '3' ],
-        ['', '4', '5', '6'],
-        ['->', {before: '7', after: '1'}, '8', '9'],
-        ['', '', undefined, undefined]
-      ]);
-      done();
+          assert.equal(d.notes.length, 1);
+          var n = d.notes[0];
+          assert(n.created);
+          assert(n.creator);
+          assert(n.description, 'test annotation')
+          assert.equal(n.motivation, 'oa:editing');
+
+          assert(n.body);
+          assert.equal(n.body.text, '1')
+
+          assert.equal(n.target.length, 1);
+          assert.equal(n.target[0], '/api/datasets/' + d._id + '/v0#cell=3,1')
+
+          done();
+        });
+
+      });
+
     });
 
   });
