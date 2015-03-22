@@ -114,14 +114,9 @@ describe('models', function() {
           var n = d.notes[0];
           assert(n.created);
           assert(n.creator);
-          assert(n.description, 'test annotation')
+          assert.equal(n.body.text, 'test annotation')
+          assert.deepEqual(n.target, ['/api/datasets/' + d._id + '.csv#cell=3,1']);
           assert.equal(n.motivation, 'oa:editing');
-
-          assert(n.body);
-          assert.equal(n.body.text, '1')
-
-          assert.equal(n.target.length, 1);
-          assert.equal(n.target[0], '/api/datasets/' + d._id + '/v0#cell=3,1')
 
           done();
         });

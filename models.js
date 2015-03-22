@@ -139,11 +139,10 @@ DatasetSchema.methods.addCsv = function(filename, comment, next) {
         'created': 'foo',
         'creator': 'foo',
         'motivation': 'oa:editing',
-        'description': comment,
         'body': {
-          'text': '1'
+          'text': comment
         },
-        'target': ['/api/datasets/' + that._id + '/v0#cell=3,1']
+        'target': that.targets(that.version, that.version - 1)
       });
     }
 
@@ -163,6 +162,41 @@ DatasetSchema.methods.addCsv = function(filename, comment, next) {
 DatasetSchema.methods.csv = function(v) {
   if (v == null) v = this.version;
   return  path.join(config.data, this._id + '-' + v + '.csv');
+}
+
+DatasetSchema.methods.targets = function(v1, v2) {
+  var diff = this.diff(v1, v2);
+  var targets = [];
+  var schema = null;
+  var headers = null;
+  var rowCount = 0;
+  var path = '/api/datasets/' + this._id + '.csv';
+
+  for (var i = 0; i < diff.length; i++) {
+    var row = diff[i];
+    var action = row[0];
+    if (action == '@@') {
+      header = row;
+    } else if (action == '!') {
+      schema = row;
+    } else {
+      rowCount += 1;
+      if (action == '+++') {
+        targets.push(path + '#row=' + rowCount);
+      } else if (action == '+') {
+        // todo: handle additional columns
+      } else if (action.match(/-+>/)) {
+        for (var j = 1; j < row.length; j++) {
+          var col = row[j];
+          if (col.before && col.after) {
+            targets.push(path + '#cell=' + rowCount + ',' + j);
+          }
+        }
+      }
+    }
+  }
+
+  return targets;
 }
 
 DatasetSchema.methods.diff = function(v1, v2) {
