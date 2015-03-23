@@ -54,3 +54,7 @@ table th :hover {
     padding: 10px;
   }
 }
+
+.reactable-pagination a {
+  padding-right: 10px;
+}

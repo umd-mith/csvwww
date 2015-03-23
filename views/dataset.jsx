@@ -1,5 +1,30 @@
 var Table = Reactable.Table;
 
+var DatasetNotes = React.createClass({
+  getDefaultProps: function() {
+    return {
+      notes: []
+    }
+  },
+  render: function() {
+    var notes = [];
+    for (var i = 0; i < this.props.notes.length; i++) {
+      var note = this.props.notes[i];
+      notes.push(
+        <div>
+        { note.body.text } - 
+        { note.target }
+        </div>
+      );
+    }
+    return (
+      <div id="notes">
+        { notes }
+      </div>
+    );
+  }
+});
+
 var UploadForm = React.createClass({
   getInitialState: function() {
     return({
@@ -93,10 +118,15 @@ var DatasetMetadata = React.createClass({
             <UploadForm datasetId={ this.props.datasetId } />
           </div>
         </div>
+        <div className="large-6 small-12">
+          <DatasetNotes notes={ this.state.notes } />
+        </div>
       </div>
     );
   }
 });
+
+
 
 function addDataset(datasetId) {
   var url = '/api/datasets/' + datasetId + '.csv';
@@ -105,7 +135,6 @@ function addDataset(datasetId) {
     // for the modal upload form 
     var appElement = document.getElementById('dataset');
     ReactModal.setAppElement(appElement);
-    //ReactModal.injectCSS();
 
     React.render(
       <div id="table-detail">
