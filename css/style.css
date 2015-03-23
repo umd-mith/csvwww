@@ -10,16 +10,47 @@
 #table-detail {
   margin-left: 3%;
   margin-right: 3%;
-  width: 94%;
   overflow-x: scroll;
 }
 
 table th :hover {
   cursor: crosshair; 
+  overflow-x: scroll;
 }
 
 #table-detail td {
   font-size: smaller;
 }
 
+#upload-form {
+  background-color: yellow;
+}
 
+.ReactModal__Overlay {
+  background-color: rgba(200, 200, 200, 0.75);
+}
+
+.ReactModal__Content {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  right: 80px;
+  bottom: 80px;
+  border: 5px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 4px;
+  outline: none;
+  padding: 40px;
+}
+
+@media (max-width: 768px) {
+  .ReactModal__Content {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 10px;
+  }
+}

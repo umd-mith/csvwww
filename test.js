@@ -113,7 +113,6 @@ describe('models', function() {
           assert.equal(d.notes.length, 1);
           var n = d.notes[0];
           assert(n.created);
-          assert(n.creator);
           assert.equal(n.body.text, 'test annotation')
           assert.deepEqual(n.target, ['/api/datasets/' + d._id + '.csv#cell=3,1']);
           assert.equal(n.motivation, 'oa:editing');

@@ -27,6 +27,7 @@
     "mongodb": "^1.4.33",
     "mongoose": "^3.8.24",
     "morgan": "~1.5.1",
+    "multer": "^0.1.8",
     "papaparse": "^4.1.0",
     "passport": "^0.2.1",
     "passport-twitter": "^1.0.2",

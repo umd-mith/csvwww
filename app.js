@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
+var multer = require('multer');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -19,10 +20,12 @@ models.mongoose.connect(config.mongodb);
 
 var app = express();
 
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(multer({dest: './uploads'}));
 app.use(bodyParser.json());
 
 app.use(session({

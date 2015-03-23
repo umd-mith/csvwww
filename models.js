@@ -67,7 +67,7 @@ var context = {
 };
 
 /*
- * Pass in a CSV URL and get back a dataset object for it.
+ * Pass in a CSV URL and get back a Dataset instance for it.
  */
 
 DatasetSchema.statics.newFromUrl = function(url, next) {
@@ -117,6 +117,10 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
     })
 }
 
+/**
+ * adds a given csv file as a new revision to a dataset.
+ */
+
 DatasetSchema.methods.addCsv = function(filename, comment, next) {
   var nextVersion = this.version == null ? 0 : this.version + 1;
   var that = this;
@@ -136,8 +140,7 @@ DatasetSchema.methods.addCsv = function(filename, comment, next) {
 
     if (that.version != 0) {
       that.notes.push({
-        'created': 'foo',
-        'creator': 'foo',
+        'created': new Date(),
         'motivation': 'oa:editing',
         'body': {
           'text': comment
@@ -159,10 +162,25 @@ DatasetSchema.methods.addCsv = function(filename, comment, next) {
   inFile.pipe(outFile);
 }
 
+/**
+ * Returns the path to a csv for a particular version of a
+ * dataset. If no version is supplied the path for the latest
+ * version is returned.
+ */
+
 DatasetSchema.methods.csv = function(v) {
   if (v == null) v = this.version;
   return  path.join(config.data, this._id + '-' + v + '.csv');
 }
+
+/**
+ * generates RFC 7111 target URIs for the differences between two 
+ * csv versions. This only includes additions, not deletions, since there
+ * is nothing to annotate in a deletion.
+ *  
+ * The diff data structure that is processed in here is documented at: 
+ * http://dataprotocols.org/tabular-diff-format/
+ */
 
 DatasetSchema.methods.targets = function(v1, v2) {
   var diff = this.diff(v1, v2);
@@ -178,17 +196,24 @@ DatasetSchema.methods.targets = function(v1, v2) {
     if (action == '@@') {
       header = row;
     } else if (action == '!') {
+      for (var j = 1; j < row.length; j++) {
+        var col = row[j];
+        if (col == '+++') {
+          // TODO: this should trigger a change to the Dataset schema
+          targets.push(path + '#col=' + j);
+        }
+      }
       schema = row;
     } else {
       rowCount += 1;
       if (action == '+++') {
         targets.push(path + '#row=' + rowCount);
       } else if (action == '+') {
-        // todo: handle additional columns
+        // TODO: handle additional columns
       } else if (action.match(/-+>/)) {
         for (var j = 1; j < row.length; j++) {
           var col = row[j];
-          if (col.before && col.after) {
+          if (col && col.before && col.after) {
             targets.push(path + '#cell=' + rowCount + ',' + j);
           }
         }
@@ -196,8 +221,14 @@ DatasetSchema.methods.targets = function(v1, v2) {
     }
   }
 
+  // todo: may need to modify previous notes if cols or rows have been added
+
   return targets;
 }
+
+/**
+ * generates a diff for two versions of a csv
+ */
 
 DatasetSchema.methods.diff = function(v1, v2) {
   var f1 = this.csv(v1);
@@ -218,6 +249,10 @@ DatasetSchema.methods.diff = function(v1, v2) {
 
   return dataDiff;
 }
+
+/**
+ * serializes a Dataset as JSON-LD
+ */ 
 
 DatasetSchema.methods.toJsonLd = function() {
   var d = this.toObject();

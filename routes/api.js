@@ -58,6 +58,21 @@ router.get('/datasets/:id', function(req, res, next) {
 	});
 });
 
+router.post('/datasets/:id', function(req, res, next) {
+  var datasetId = req.params.id;
+  var comment = req.body.comment;
+  var path = req.files.upload.path;
+  Dataset.findById(datasetId, function(err, dataset) {
+    if (dataset) {
+      dataset.addCsv(req.files.upload.path, comment, function(err, dataset) {
+        res.redirect(303, '/datasets/' + datasetId);
+      });
+    } else {
+      res.send(404);
+    }
+  });
+});
+
 router.get('/context', function(req, res, next) {
   res.json(models.context);
 });
