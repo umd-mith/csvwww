@@ -106,6 +106,7 @@ describe('models', function() {
 
         fs.writeFileSync('test-data/temp.csv', 'col1,col2,col3\n1,2,3\n4,5,6\n1,8,9\n');
         d.addCsv('test-data/temp.csv', 'test annotation', function(err, fn) {
+          console.log(err);
           assert(! err);
           assert(fn);
           assert.equal(d.version, 1);
