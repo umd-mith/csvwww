@@ -13,6 +13,10 @@
   overflow-x: scroll;
 }
 
+#datasets table {
+  width: 90%;
+}
+
 table th :hover {
   cursor: crosshair; 
   overflow-x: scroll;

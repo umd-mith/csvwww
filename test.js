@@ -5,7 +5,7 @@ var models = require('./models');
 
 // use test database and test data directory for files
 
-models.mongoose.connect("mongodb://localhost/csvhub-test");
+models.mongoose.connect("mongodb://localhost/csvwww-test");
 models.config.data = "test-data";
 
 // clean up db and filesystem before & after each test
