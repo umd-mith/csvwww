@@ -62,3 +62,11 @@ table th :hover {
 .reactable-pagination a {
   padding-right: 10px;
 }
+
+.note {
+  font-size: smaller;
+}
+
+.note time {
+  font-style: italic;
+}

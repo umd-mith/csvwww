@@ -10,16 +10,19 @@ var DatasetNotes = React.createClass({
     var notes = [];
     for (var i = 0; i < this.props.notes.length; i++) {
       var note = this.props.notes[i];
+      var created = formatDateTime(note.created);
       notes.push(
-        <div>
-        { note.body.text } - 
-        { note.target }
-        </div>
+        <li className="note">
+          <time>{ created }</time> - { note.body.text } { note.target }
+        </li>
       );
     }
     return (
-      <div id="notes">
-        { notes }
+      <div id="dataset-notes">
+        Notes:
+        <ul>
+          { notes }
+        </ul>
       </div>
     );
   }
@@ -102,31 +105,43 @@ var DatasetMetadata = React.createClass({
     });
   },
   render: function() {
+    var modified = formatDateTime(this.state.modified);
+    var created = formatDateTime(this.state.created);
     return (
-      <div className="row" id="dataset-metadata">
-        <div className="large-6 small-12 column">
-          <div>Title: <span contentEditable>{ this.state.title }</span></div>
-          <div>Creator: { this.state.creator }</div>
-          <div>Description: <span contentEditable>{ this.state.description }&nbsp;</span></div>
-          <div>Forked from: <a href={ this.state.distribution.derivedFrom } title={ this.state.distribution.derivedFrom }>{ this.state.forkedFrom }</a></div>
-        </div>
-        <div className="large-6 small-12 column">
-          <div>
-            <a className="tiny info button" href={ this.state['@id'] + '.csv' }>C S V</a>
-            &nbsp;
-            <a className="tiny secondary button" href={ this.state['@id'] }>C S V W</a>
-            <UploadForm datasetId={ this.props.datasetId } />
+      <div id="dataset-metadata">
+        <div className="row">
+          <div className="large-6 small-12 column">
+            <div>Title: <span contentEditable>{ this.state.title }</span></div>
+            <div>Creator: { this.state.creator }</div>
+            <div>Created: { created }</div>
+            <div>Modified: { modified }</div>
+            <div>Description: <span contentEditable>{ this.state.description }&nbsp;</span></div>
+            <div>Forked from: <a href={ this.state.distribution.derivedFrom } title={ this.state.distribution.derivedFrom }>{ this.state.forkedFrom }</a></div>
+          </div>
+          <div className="large-6 small-12 column">
+            <div>
+              <a className="tiny info button" href={ this.state['@id'] + '.csv' }>C S V</a>
+              &nbsp;
+              <a className="tiny secondary button" href={ this.state['@id'] }>C S V W</a>
+              <UploadForm datasetId={ this.props.datasetId } />
+            </div>
           </div>
         </div>
-        <div className="large-6 small-12">
-          <DatasetNotes notes={ this.state.notes } />
+        <div className="row">
+          <div className="large-12 small-12 columns">
+            <DatasetNotes notes={ this.state.notes } />
+          </div>
         </div>
       </div>
     );
   }
+
 });
 
-
+function formatDateTime(s) {
+  var t = new Date(s);
+  return t.toLocaleDateString() + " " + t.toLocaleTimeString(); 
+}
 
 function addDataset(datasetId) {
   var url = '/api/datasets/' + datasetId + '.csv';
@@ -139,10 +154,10 @@ function addDataset(datasetId) {
     React.render(
       <div id="table-detail">
         <div className="row">
-        <DatasetMetadata datasetId={ datasetId } />
+          <DatasetMetadata datasetId={ datasetId } />
         </div>
         <div className="row">
-        <Table className="table" data={results.data} itemsPerPage={100} sortable={true} />
+          <Table className="table" data={results.data} itemsPerPage={100} sortable={true} />
         </div>
       </div>,
       document.getElementById('dataset')
