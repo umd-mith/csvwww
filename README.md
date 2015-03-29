@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/umd-mith/csvwww.svg)](http://travis-ci.org/umd-mith/csvwww)
 
 A webapp that lets you load in CSVW datasets, and publish changes to them. It requires 
-<a href="http://nodejs.org">Node</a>a> and <a href="http://mongodb.org">MongoDB</a>.
+[Node](http://nodejs.org) and [MongoDB](http://mongodb.org).
 
 ## Run
 
