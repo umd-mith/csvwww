@@ -10,19 +10,20 @@ var MongoStore = require('connect-mongo')(session);
 
 var models = require('./models');
 var auth = require('./routes/auth');
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
 var datasets = require('./routes/datasets');
+var about = require('./routes/about');
 
 var config = require('./config.json');
 models.mongoose.connect(config.mongodb);
 
 var app = express();
 
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+app.set('json spaces', 2);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(multer({dest: './uploads'}));
@@ -45,11 +46,12 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/auth', auth);
 app.use('/users', users);
 app.use('/datasets', datasets);
 app.use('/api', api);
+app.use('/about', about);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

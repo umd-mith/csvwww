@@ -53,17 +53,20 @@ router.get('/datasets/:id', function(req, res, next) {
 		if (dataset) {
       res.json(dataset.toJsonLd());
 		} else {
-			res.send(404);
+			res.status(404);
 		}
 	});
 });
 
-router.post('/datasets/:id', function(req, res, next) {
+router.post('/datasets/:id', isAuthenticated, function(req, res, next) {
   var datasetId = req.params.id;
   var comment = req.body.comment;
   var path = req.files.upload.path;
   Dataset.findById(datasetId, function(err, dataset) {
-    if (dataset) {
+    if (dataset && dataset.creator != req.user.username) {
+      res.status(401);
+      res.json({"error": "you don't have permission to update this dataset"});
+    } else if (dataset) {
       dataset.addCsv(req.files.upload.path, comment, function(err, dataset) {
         res.redirect(303, '/datasets/' + datasetId);
       });

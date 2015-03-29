@@ -7,11 +7,11 @@ var rimraf = require('rimraf');
 var models = require('./models')
 
 gulp.task('default', function() {
-  gulp.start('bower', 'react', 'css', 'js');
+  gulp.start('bower', 'react', 'css', 'js', 'images');
 });
 
 gulp.task('develop', function() {
-  nodemon({script: 'bin/www', ext: 'js jsx css hbs', ignore: ['./build/**']})
+  nodemon({script: 'bin/www', ext: 'js jsx css hbs images', ignore: ['./build/**']})
     .on('change', ['default']);
 });
 
@@ -32,6 +32,11 @@ gulp.task('css', function() {
     'bower_components/foundation/css/normalize.css.map',
     'css/style.css'
   ]).pipe(gulp.dest('public/css/'));
+});
+
+gulp.task('images', function() {
+  return gulp.src('images/*')
+    .pipe(gulp.dest('public/images'));
 });
 
 gulp.task('js', function() {

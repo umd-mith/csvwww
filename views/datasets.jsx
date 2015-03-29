@@ -1,4 +1,5 @@
 var UploadDataset = React.createClass({
+
   handleSubmit: function(e) {
     e.preventDefault();
     var that = this;
@@ -16,7 +17,7 @@ var UploadDataset = React.createClass({
       error: function(xhr, status, err) {
         try {
           var e = JSON.parse(xhr.responseText);
-          // using the placeholder text for an error is a bit of an aboomination, sigh
+          // TODO: using the placeholder text for an error is a bit of an abomination
           var oldPlaceholder = urlInput.getAttribute('placeholder');
           urlInput.value = '';
           urlInput.setAttribute('placeholder', e.error);
@@ -28,6 +29,7 @@ var UploadDataset = React.createClass({
       }.bind(this)
     });
   },
+
   render: function() {
     return (
       <form className="row" onSubmit={this.handleSubmit}>
@@ -40,9 +42,12 @@ var UploadDataset = React.createClass({
       </form>
     );
   }
+
 });
 
+
 var Dataset = React.createClass({
+
   render: function() {
     var d = this.props.dataset;
     var modified = new Date(d.modified);
@@ -56,9 +61,12 @@ var Dataset = React.createClass({
       </tr>
     );
   }
+
 });
 
+
 var DatasetList = React.createClass({
+
   render: function() {
     console.log(this.props.newDataset);
     var datasetNodes = this.props.data.map(function (dataset) {
@@ -74,14 +82,18 @@ var DatasetList = React.createClass({
   }
 });
 
+
 var DatasetsBox = React.createClass({
+
   getInitialState: function() {
     return {data: []};
   },
+
   handleUpload: function(d) {
     this.setState({newDataset: d._id});
     this.loadDatasets();
   },
+
   loadDatasets: function(next) {
     $.ajax({
       url: this.props.url,
@@ -94,10 +106,12 @@ var DatasetsBox = React.createClass({
       }.bind(this)
     });
   },
+
   componentDidMount: function() {
     this.loadDatasets();
     setInterval(this.loadDatasets, this.props.pollInterval)
   },
+
   render: function() {
     return (
       <div id="datasets" className="row large-offset-2 large-8 small-offset-1 small-10">
@@ -106,7 +120,9 @@ var DatasetsBox = React.createClass({
       </div>
     );
   }
+
 });
+
 
 React.render(
   <DatasetsBox url="/api/datasets" pollInterval={20000} />,

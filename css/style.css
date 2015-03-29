@@ -70,3 +70,7 @@ table th :hover {
 .note time {
   font-style: italic;
 }
+
+#about {
+  padding-top: 30px;
+}

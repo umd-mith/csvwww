@@ -137,16 +137,18 @@ DatasetSchema.methods.addCsv = function(filename, comment, next) {
 
   outFile.on('close', function() {
     that.version = nextVersion;
+    var t = new Date();
 
     if (that.version != 0) {
       that.notes.push({
-        'created': new Date(),
+        'created': t,
         'motivation': 'oa:editing',
         'body': {
           'text': comment
         },
         'target': that.targets(that.version, that.version - 1)
       });
+      that.modified = t;
     }
 
     that.save(function(err, dataset) {
