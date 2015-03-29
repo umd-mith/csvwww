@@ -4,12 +4,17 @@ A webapp that lets you load in CSVW datasets, and publish changes to them. It re
 [Node](http://nodejs.org) and [MongoDB](http://mongodb.org). It is a prototype meant for
 research purposes, but it's here in case you might get some use and/or ideas from it.
 
-## Run
+## Install
 
+    % sudo apt-get install node mongodb gcc make build-essential
     % npm install -g gulp
     % npm install
     % gulp
-    % cp config.json.template config.json # and edit as appropriate
+
+## Run
+
+    % cp config.json.template config.json 
+    # and edit as appropriate
     % bin/www
 
 ## Test

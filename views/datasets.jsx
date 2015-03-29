@@ -68,7 +68,6 @@ var Dataset = React.createClass({
 var DatasetList = React.createClass({
 
   render: function() {
-    console.log(this.props.newDataset);
     var datasetNodes = this.props.data.map(function (dataset) {
       return (
         <Dataset dataset={dataset} />
