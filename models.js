@@ -99,6 +99,7 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
           } else {
             var dataset = new Dataset(framed["@graph"][0]);
             dataset.derivedFrom = metadataUrl;
+            dataset.publisher = "csvwww";
           }
           dataset._id = datasetId;
           dataset.distribution = {
@@ -263,6 +264,7 @@ DatasetSchema.methods.toJsonLd = function() {
   d.url = '/datasets/' + d._id;
   delete d._id;
   delete d.__v;
+  delete d.version;
 
   return d;
 }
