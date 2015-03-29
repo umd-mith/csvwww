@@ -3,7 +3,7 @@
 csvwww is a webapp that lets you load in [CSVW](http://www.w3.org/2013/csvw/wiki/Main_Page) datasets, and 
 publish changes to them using [Web Annotation](http://www.w3.org/annotation/). It is a prototype 
 created as part of a collaboration between MITH and the HTRC on the 
-[Workset Creation for Scholarly Analysis](http://worksets.htrc.illinois.edu/worksets/).
+[Workset Creation for Scholarly Analysis](http://worksets.htrc.illinois.edu/worksets/) project.
 
 ## Install
 
