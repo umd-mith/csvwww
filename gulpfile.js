@@ -29,6 +29,7 @@ gulp.task('css', function() {
   return gulp.src([
     'bower_components/foundation/css/foundation.css',
     'bower_components/foundation/css/foundation.css.map',
+    'bower_components/foundation/css/normalize.css',
     'bower_components/foundation/css/normalize.css.map',
     'css/style.css'
   ]).pipe(gulp.dest('public/css/'));
