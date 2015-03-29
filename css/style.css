@@ -49,6 +49,13 @@ table th :hover {
   padding: 40px;
 }
 
+.avatar {
+  height: 30px;
+  padding-top: 10px;
+  display: inline-block;
+  vertical-align: middle; 
+}
+
 @media (max-width: 768px) {
   .ReactModal__Content {
     top: 10px;

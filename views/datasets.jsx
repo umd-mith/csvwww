@@ -52,12 +52,11 @@ var Dataset = React.createClass({
     var d = this.props.dataset;
     var modified = new Date(d.modified);
     modified = modified.toLocaleDateString() + " " + modified.toLocaleTimeString();
-    //modified = modified.toLocaleDateString() + " " + modified.toLocaleTimeString();
     return (
       <tr id={"dataset-" + d._id}>
         <td className="hide-for-small">{ modified }</td>
         <td><a href={"/datasets/" +  d._id }>{ d.title }</a></td>
-        <td className="hide-for-small"><a href={"/users/" + d.creator }>{ d.creator }</a></td>
+        <td className="hide-for-small"><a href={"http://twitter.com/" + d.creator }>{ d.creator }</a></td>
       </tr>
     );
   }
