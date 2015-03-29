@@ -88,6 +88,10 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
         return next("CSV does not exist at " + url, null);
       }
 
+      if (! response.headers['content-type'].match(/text\/csv/)){
+        return next(url + " is not a CSV", null);
+      }
+
       // save the metadata 
       // TODO: also look at response Link header and also for metadata.json
       var metadataUrl = url + "-metadata.json";
