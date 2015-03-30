@@ -88,7 +88,7 @@ DatasetSchema.statics.newFromUrl = function(url, next) {
         return next("CSV does not exist at " + url, null);
       }
 
-      if (! response.headers['content-type'].match(/text\/csv/)){
+      if (! response.headers['content-type'].match(/text\/(csv|plain)/)){
         return next(url + " is not a CSV", null);
       }
 
